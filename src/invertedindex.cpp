@@ -55,7 +55,7 @@ QVector<Entry> InvertedIndex::GetWordCount(const QString &word)
             entry.push_back(entFind);
         }
     }
-    freq_dictionary[word]=entry; // не знаю зачем map
+    freq_dictionary.insert(freq_dictionary.key(entry),freq_dictionary.value(word)); // не знаю зачем map
     return entry;
 }
 
