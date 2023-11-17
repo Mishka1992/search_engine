@@ -33,6 +33,7 @@ public:
 */
     QVector<Entry> GetWordCount(const QString& word);
 private:
+    Entry IndexFile(const QString& content,size_t index,const QString& word);
 
     QMap<QString, QVector<Entry>> freq_dictionary; // частотный словарь
     QVector<QString> docs; // список содержимого документов

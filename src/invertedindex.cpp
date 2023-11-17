@@ -1,7 +1,7 @@
 #include "invertedindex.h"
 #include <QDebug>
 QMutex mtx;
-Entry IndexFile(const QString& content,size_t index,const QString& word)
+Entry InvertedIndex::IndexFile(const QString& content,size_t index,const QString& word)
 {
     mtx.lock();
     QRegExp reg("\\s+");
@@ -48,14 +48,14 @@ QVector<Entry> InvertedIndex::GetWordCount(const QString &word)
 
     for(int i=0;i<docs.size();i++)
     {
-        QFuture<Entry> entFind=QtConcurrent::run(IndexFile,docs[i],i,word);
+        QFuture<Entry> entFind=QtConcurrent::run(this,&InvertedIndex::IndexFile,docs[i],i,word);
         Entry entr1=entFind;
         if(entr1.count!=0)
         {
             entry.push_back(entFind);
         }
     }
-
+    freq_dictionary[word]=entry; // не знаю зачем map
     return entry;
 }
 
