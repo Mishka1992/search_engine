@@ -1,5 +1,5 @@
-#include "../include/converterjson.h"
-#include "../include/anyError.h"
+#include "converterjson.h"
+#include "anyError.h"
 #include <QMutex>
 QMutex mtx;
 QVector<QString> ConverterJSON::GetTextDocuments()

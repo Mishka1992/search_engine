@@ -1,6 +1,7 @@
 #ifndef INVERTEDINDEX_H
 #define INVERTEDINDEX_H
 #include <QVector>
+#include <QString>
 #include <QMap>
 #include <QRegExp>
 using namespace std;
@@ -29,8 +30,9 @@ public:
 */
     QVector<Entry> GetWordCount(const QString& word);
 private:
-    QVector<QString> docs; // список содержимого документов
+
     QMap<QString, QVector<Entry>> freq_dictionary; // частотный словарь
+    QVector<QString> docs; // список содержимого документов
 
 };
 

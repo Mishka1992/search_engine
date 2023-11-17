@@ -21,6 +21,7 @@ add_executable(search_engine
   src/invertedindex.cpp
 
 )
+include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 target_link_libraries(search_engine PRIVATE Qt${QT_VERSION_MAJOR}::Core )
 install(TARGETS search_engine
     LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
@@ -34,7 +35,7 @@ googletest
 GIT_REPOSITORY https://github.com/google/googletest.git
 GIT_TAG        v1.14.0
 )
-
+include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
 include_directories(${gtest_SOURCE_DIR}/include ${gtest_SOURCE_DIR})
 set(gtest_disable_pthreads on)
 
@@ -45,7 +46,8 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 add_executable(${PROJECT_NAME}
         Google_tests/ConverJSONTest.cpp
-
+        Google_tests/InvertedIndexTest.cpp
+        src/invertedindex.cpp
 )
 set_target_properties(${PROJECT_NAME} PROPERTIES
         CXX_STANDARD 17
@@ -53,7 +55,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
         )
 
 
-target_link_libraries(${PROJECT_NAME} gtest gtest_main)
+target_link_libraries(${PROJECT_NAME} PRIVATE Qt${QT_VERSION_MAJOR}::Core gtest gtest_main)
 
 
 install(TARGETS ${PROJECT_NAME}

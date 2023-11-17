@@ -1,26 +1,17 @@
-#include "../include/invertedindex.h"
+#include "invertedindex.h"
 #include <QDebug>
-#include <sstream>
-#include <QtConcurrent/QtConcurrent>
 
 void InvertedIndex::UpdateDocumentBase(QVector<QString> input_docs)
 {
 
     if(input_docs.empty())
     {
-        qDebug()<<"size = 0";
         return;
     }
 
-    //  QVector<QString> vec;
-    for(auto &i:input_docs)
+    for(auto &i: input_docs)
     {
-
-        qDebug()<<"====================================";
-        //qDebug()<<input_docs[i];
-
         docs.push_back(i);
-
     }
 
 
@@ -28,10 +19,14 @@ void InvertedIndex::UpdateDocumentBase(QVector<QString> input_docs)
 
 QVector<Entry> InvertedIndex::GetWordCount(const QString &word)
 {
-    QRegExp reg(" ");
+    QRegExp reg("\\s+");
     QVector<Entry> entry;
+    if(docs.empty())
+    {
+        return {};
+    }
 
-    for(int i=0;0<docs.size();i++)
+    for(int i=0;i<docs.size();i++)
     {
         Entry ent;
         ent.doc_id=i;
@@ -39,20 +34,16 @@ QVector<Entry> InvertedIndex::GetWordCount(const QString &word)
         QStringList text=docs[i].split(reg);
         for (int index = 0; index < text.length(); index++)
         {
-
-            if(text.at(index).toStdString()==word.toStdString());
+            if(text.at(index)==word)
             {
                 ent.count++;
             }
-
         }
-
-        entry.push_back(ent);
+        if(ent.count!=0){
+            entry.push_back(ent);
+        }
     }
     return entry;
 }
 
-//void InvertedIndex::FreqDictionary(QVector<QString> docs)
-//{
 
-//}
