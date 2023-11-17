@@ -1,7 +1,7 @@
 #include "converterjson.h"
 #include "anyError.h"
 #include <QMutex>
-QMutex mtx;
+
 QVector<QString> ConverterJSON::GetTextDocuments()
 {
     QFile file("config.json");
@@ -9,7 +9,7 @@ QVector<QString> ConverterJSON::GetTextDocuments()
         throw NoFile();
     }
     QByteArray val;
-mtx.lock();
+
     file.setFileName("config.json");
     file.open(QIODevice::ReadOnly | QIODevice::Text);
     val = file.readAll();
@@ -41,7 +41,7 @@ mtx.lock();
         }
 
     }
-mtx.unlock();
+
     return files;
 }
 

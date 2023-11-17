@@ -1,5 +1,26 @@
 #include "invertedindex.h"
 #include <QDebug>
+QMutex mtx;
+Entry IndexFile(const QString& content,size_t index,const QString& word)
+{
+    mtx.lock();
+    QRegExp reg("\\s+");
+    Entry entry;
+
+    entry.doc_id=index;
+    entry.count=0;
+    QStringList text=content.split(reg);
+    for (int index = 0; index < text.length(); index++)
+    {
+        if(text.at(index)==word)
+        {
+            entry.count++;
+        }
+    }
+
+    mtx.unlock();
+    return entry;
+}
 
 void InvertedIndex::UpdateDocumentBase(QVector<QString> input_docs)
 {
@@ -19,7 +40,6 @@ void InvertedIndex::UpdateDocumentBase(QVector<QString> input_docs)
 
 QVector<Entry> InvertedIndex::GetWordCount(const QString &word)
 {
-    QRegExp reg("\\s+");
     QVector<Entry> entry;
     if(docs.empty())
     {
@@ -28,21 +48,14 @@ QVector<Entry> InvertedIndex::GetWordCount(const QString &word)
 
     for(int i=0;i<docs.size();i++)
     {
-        Entry ent;
-        ent.doc_id=i;
-        ent.count=0;
-        QStringList text=docs[i].split(reg);
-        for (int index = 0; index < text.length(); index++)
+        QFuture<Entry> entFind=QtConcurrent::run(IndexFile,docs[i],i,word);
+        Entry entr1=entFind;
+        if(entr1.count!=0)
         {
-            if(text.at(index)==word)
-            {
-                ent.count++;
-            }
-        }
-        if(ent.count!=0){
-            entry.push_back(ent);
+            entry.push_back(entFind);
         }
     }
+
     return entry;
 }
 

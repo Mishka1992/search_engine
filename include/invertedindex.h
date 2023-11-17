@@ -4,6 +4,9 @@
 #include <QString>
 #include <QMap>
 #include <QRegExp>
+#include <QFuture>
+#include <QMutex>
+#include <QtConcurrent/QtConcurrent>
 using namespace std;
 struct Entry {
     size_t doc_id, count;
