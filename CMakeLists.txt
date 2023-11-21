@@ -19,6 +19,8 @@ add_executable(search_engine
   include/anyError.h
   include/invertedindex.h
   src/invertedindex.cpp
+  include/searchserver.h
+  src/searchserver.cpp
 
 )
 include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
@@ -47,7 +49,9 @@ enable_testing()
 add_executable(${PROJECT_NAME}
         Google_tests/ConverJSONTest.cpp
         Google_tests/InvertedIndexTest.cpp
+        Google_tests/SearchServerTest.cpp
         src/invertedindex.cpp
+        src/searchserver.cpp
 )
 set_target_properties(${PROJECT_NAME} PROPERTIES
         CXX_STANDARD 17

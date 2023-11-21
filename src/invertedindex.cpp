@@ -1,5 +1,6 @@
 #include "invertedindex.h"
 #include <QDebug>
+
 QMutex mtx;
 Entry InvertedIndex::IndexFile(const QString& content,size_t index,const QString& word)
 {
@@ -21,6 +22,8 @@ Entry InvertedIndex::IndexFile(const QString& content,size_t index,const QString
     mtx.unlock();
     return entry;
 }
+
+
 
 void InvertedIndex::UpdateDocumentBase(QVector<QString> input_docs)
 {

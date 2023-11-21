@@ -1,10 +1,12 @@
 #include <QCoreApplication>
 #include "converterjson.h"
 #include "invertedindex.h"
+#include "searchserver.h"
 #include <QDebug>
 #include <QtConcurrent/QtConcurrent>
 #include <QFuture>
 #include <QMutex>
+#include <algorithm>
 QMutex mtx2;
 int main(int argc, char *argv[])
 {
@@ -12,27 +14,15 @@ int main(int argc, char *argv[])
 
     ConverterJSON json;
     InvertedIndex invIndex;
+
     QVector<QString> doc=json.GetTextDocuments();
-//QVector<QString> doc;
-//doc.push_back("milk milk milk milk water water water");
-//doc.push_back("milk water water");
-//doc.push_back("milk milk milk milk milk water water water water water");
-//doc.push_back("americano cappuccino");
+
     invIndex.UpdateDocumentBase(doc);
-//    QVector<QString> words{"milk","water","cappuccino"};
 
-//    for(int i=0;i<words.size();i++){
-//        qDebug()<<words[i];
-//         qDebug()<<"=============================";
-    QVector<Entry> vec=invIndex.GetWordCount("are");
+    SearchServer searchServer(invIndex);
 
-    for(int i=0;i<vec.size();i++)
-    {
+    QVector<QVector<RelativeIndex> > rel=searchServer.search(json.GetRequests());
 
-        qDebug()<<"{"<<vec[i].doc_id<<","<<vec[i].count<<"}";
-
-    }
-//}
 
     return 0;
 }
