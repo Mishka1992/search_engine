@@ -22,8 +22,8 @@ int main(int argc, char *argv[])
     SearchServer searchServer(invIndex);
 
     QVector<QVector<RelativeIndex> > rel=searchServer.search(json.GetRequests());
-
-
+    json.putAnswers(searchServer.answers);
+//QtConcurrent::run(t,&ConverterJSON::putAnswers,searchServer.answers);
     return 0;
 }
 

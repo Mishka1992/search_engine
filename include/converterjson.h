@@ -35,7 +35,7 @@ public:
     /**
 * Положить в файл answers.json результаты поисковых запросов
 */
-    void putAnswers(QVector<QVector<pair<int, float>>> answers);
+    void putAnswers(QVector<pair<int,QVector<pair<size_t, float>>>> answers);
 
 };
 

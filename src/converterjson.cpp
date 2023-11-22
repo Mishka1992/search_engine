@@ -1,7 +1,8 @@
 #include "converterjson.h"
 #include "anyError.h"
 #include <QMutex>
-
+#include <math.h>
+#include <algorithm>
 QVector<QString> ConverterJSON::GetTextDocuments()
 {
     QFile file("config.json");
@@ -17,6 +18,14 @@ QVector<QString> ConverterJSON::GetTextDocuments()
     QJsonParseError error;
     QJsonDocument doc = QJsonDocument::fromJson(val, &error);
     QVector<QString> files;
+    QFile fAnswer("answer.json");
+    if(!fAnswer.exists()){
+        fAnswer.open(QIODevice::WriteOnly);
+        fAnswer.close();
+    }else{
+        fAnswer.open(QIODevice::WriteOnly | QIODevice::Truncate);
+        fAnswer.close();
+    }
     if (doc.isObject())
     {
 
@@ -91,28 +100,76 @@ QVector<QString> ConverterJSON::GetRequests()
     file.close();
     QJsonParseError error;
     QJsonDocument doc = QJsonDocument::fromJson(val, &error);
-    QVector<QString> files;
+    QVector<QString> requests;
     if (doc.isObject())
     {
         QJsonArray array = doc["requests"].toArray();
-
+        QJsonObject recordObject;
+        QJsonObject objObject;
         QList <QVariant> ar = array.toVariantList();
         for( auto &i : ar ) {
-            files.push_back(i.toString());
+            requests.push_back(i.toString());
         }
     }
-    return files;
+    return requests;
 }
 
-void ConverterJSON::putAnswers(QVector<QVector<pair<int, float>>> answers)
+void ConverterJSON::putAnswers(QVector<pair<int,QVector<pair<size_t, float>>>> answers)
 {
-    QFile file("answer.json");
-    if(!file.exists()){
-        file.open(QIODevice::WriteOnly);
-        file.close();
-    }else{
-        file.open(QIODevice::WriteOnly | QIODevice::Truncate);
-        file.close();
+    QJsonObject recordObject;
+    QJsonObject objObject;
+    QJsonObject obj2Object;
+    QJsonObject obj3Object;
+    QJsonObject obj4Object;
+
+    for(int i=0;i<answers.size();i++)
+    {
+
+        if(answers[i].second.empty())
+        {
+            obj2Object.insert("result", QJsonValue::fromVariant(false));
+            objObject.insert("request" + QString::number(answers[i].first), obj2Object);
+        }else{
+
+            if(answers[i].second.size()==1){
+
+                for(auto &n:answers[i].second)
+                {
+
+                    obj2Object.insert("docid", QJsonValue::fromVariant(n.first));
+                    obj2Object.insert("rank", n.second);
+
+                }
+                obj2Object.insert("result", QJsonValue::fromVariant(true));
+                objObject.insert("request" + QString::number(answers[i].first), obj2Object);
+            }else{
+                QJsonArray JsonTextArray;
+                for(auto &n:answers[i].second)
+                {
+                    QJsonObject obj;
+                    obj.insert("docid", QJsonValue::fromVariant(n.first));
+                    obj.insert("rank", n.second);
+                    JsonTextArray.push_back(obj);
+                }
+                obj4Object.insert("result", QJsonValue::fromVariant(true));
+                obj4Object.insert("relevance", JsonTextArray);
+                objObject.insert("request" + QString::number(answers[i].first), obj4Object);
+            }
+        }
+
+
     }
+    recordObject.insert("answer", objObject);
+
+
+    QJsonDocument doc(recordObject);
+    QString jsonString = doc.toJson(QJsonDocument::Indented);
+
+    QFile fAnswer("answer.json");
+
+    fAnswer.open(QIODevice::WriteOnly | QIODevice::Text);
+    QTextStream stream( &fAnswer );
+    stream << jsonString;
+    fAnswer.close();
 
 }

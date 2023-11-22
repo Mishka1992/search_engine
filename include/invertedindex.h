@@ -32,6 +32,7 @@ public:
 * @return возвращает подготовленный список с частотой слов
 */
     QVector<Entry> GetWordCount(const QString& word);
+
 private:
     Entry IndexFile(const QString& content,size_t index,const QString& word);
 

@@ -11,10 +11,24 @@ QVector<QVector<RelativeIndex> > SearchServer::search(const QVector<QString> &qu
     {
         return {};
     }
-    for(auto &query:queries_input)
+    for(int i=0;i<queries_input.size();i++)
     {
-        QFuture<QVector<RelativeIndex>> relInd=QtConcurrent::run(this,&SearchServer::getRelativeIndex,query);
+        QFuture<QVector<RelativeIndex>> relInd=QtConcurrent::run(this,&SearchServer::getRelativeIndex,queries_input[i]);
+        QVector<pair<size_t, float>> resuilt;
 
+
+
+        for(auto &n:relInd)
+        {
+
+            for(auto &k : n)
+            {
+               resuilt.push_back({k.doc_id,k.rank});
+            }
+
+        }
+
+        answers.push_back(pair<int,QVector<pair<size_t, float>>>(i+1,resuilt));
         relatInd.push_back(relInd);
     }
 
