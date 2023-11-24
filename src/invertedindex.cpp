@@ -1,5 +1,4 @@
 #include "invertedindex.h"
-#include <QDebug>
 
 QMutex mtx;
 Entry InvertedIndex::IndexFile(const QString& content,size_t index,const QString& word)

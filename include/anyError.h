@@ -1,5 +1,6 @@
 #ifndef ANYERROR_H
 #define ANYERROR_H
+
 #include <exception>
 using namespace std;
 class NoFile:public exception

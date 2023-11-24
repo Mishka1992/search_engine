@@ -1,8 +1,7 @@
 #include "searchserver.h"
-#include <QDebug>
 #include <QtConcurrent/QtConcurrent>
-QMutex mtServer;
 
+QMutex mtServer;
 
 QVector<QVector<RelativeIndex> > SearchServer::search(const QVector<QString> &queries_input)
 {
@@ -16,14 +15,12 @@ QVector<QVector<RelativeIndex> > SearchServer::search(const QVector<QString> &qu
         QFuture<QVector<RelativeIndex>> relInd=QtConcurrent::run(this,&SearchServer::getRelativeIndex,queries_input[i]);
         QVector<pair<size_t, float>> resuilt;
 
-
-
         for(auto &n:relInd)
         {
 
             for(auto &k : n)
             {
-               resuilt.push_back({k.doc_id,k.rank});
+                resuilt.push_back({k.doc_id,k.rank});
             }
 
         }
@@ -38,7 +35,7 @@ QVector<QVector<RelativeIndex> > SearchServer::search(const QVector<QString> &qu
 
 QVector<RelativeIndex> SearchServer::getRelativeIndex(const QString& query)
 {
- mtServer.lock();
+    mtServer.lock();
     QVector<RelativeIndex> relativeIndex;
     auto request=getWordRequest(query);
 

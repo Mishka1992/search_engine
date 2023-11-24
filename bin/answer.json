@@ -25,22 +25,6 @@
                 }
             ],
             "result": true
-        },
-        "request3": {
-            "result": false
-        },
-        "request4": {
-            "relevance": [
-                {
-                    "docid": 1,
-                    "rank": 1
-                },
-                {
-                    "docid": 0,
-                    "rank": 0.6499999761581421
-                }
-            ],
-            "result": true
         }
     }
 }

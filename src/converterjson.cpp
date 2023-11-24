@@ -1,8 +1,6 @@
 #include "converterjson.h"
 #include "anyError.h"
-#include <QMutex>
-#include <math.h>
-#include <algorithm>
+
 QVector<QString> ConverterJSON::GetTextDocuments()
 {
     QFile file("config.json");
@@ -78,7 +76,8 @@ int ConverterJSON::GetResponsesLimit()
         {
             QJsonObject obj = test.toObject();
             int max_responses = obj["max_responses"].toInt();
-            qDebug()<<obj["name"].toString();
+            qDebug()<<"name: "<<obj["name"].toString();
+            qDebug()<<"max_responses: "<<max_responses;
             return max_responses;
         }
         return 0;
@@ -121,10 +120,12 @@ void ConverterJSON::putAnswers(QVector<pair<int,QVector<pair<size_t, float>>>> a
     QJsonObject obj2Object;
     QJsonObject obj3Object;
     QJsonObject obj4Object;
-
+    int limit=GetResponsesLimit();
     for(int i=0;i<answers.size();i++)
     {
-
+        if(i==limit){
+            break;
+        }
         if(answers[i].second.empty())
         {
             obj2Object.insert("result", QJsonValue::fromVariant(false));
