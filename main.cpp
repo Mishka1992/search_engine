@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
 
     SearchServer searchServer(invIndex);
 
-    QVector<QVector<RelativeIndex> > rel=searchServer.search(json.GetRequests());
+    searchServer.search(json.GetRequests());
     json.putAnswers(searchServer.answers);
 
     return 0;
