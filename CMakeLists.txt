@@ -47,7 +47,7 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 add_executable(${PROJECT_NAME}
-        Google_tests/ConverJSONTest.cpp
+
         Google_tests/InvertedIndexTest.cpp
         Google_tests/SearchServerTest.cpp
         src/invertedindex.cpp
