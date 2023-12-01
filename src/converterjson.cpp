@@ -37,12 +37,14 @@ QVector<QString> ConverterJSON::GetTextDocuments()
             {
                 while(!file.atEnd())
                 {
-                    //читаем строку
+
                     QString str = file.readAll();
 
                     files.push_back(str);
                 }
 
+            }else{
+                qDebug()<<"Path or file not found: "<<i.toString();
             }
             file.close();
         }
